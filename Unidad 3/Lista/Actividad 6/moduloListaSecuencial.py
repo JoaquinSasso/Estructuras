@@ -10,33 +10,29 @@ class ListaSecuencial:
       self.__ultimo = 0
       self.__indice = 0
    
-   def insertar(self, elemento : object) -> None:
-      if self.__ultimo == len(self.__arreglo):
-        print("Lista llena")
-      elif self.__ultimo == 0:
-         self.__arreglo[0] = elemento
+   def insertar(self, elemento : object, posicion : int) -> None:
+      if posicion < 0 or posicion >= len(self.__arreglo):
+         raise Exception("Posicion fuera de rango")
+      elif self.__ultimo + 1 > len(self.__arreglo):
+         raise Exception("Lista llena")
+      elif posicion == self.__ultimo:
+         self.__arreglo[self.__ultimo] = elemento
          self.__ultimo += 1
       else:
-         i = 0
-         while((i < self.__ultimo) and (self.__arreglo[i] <= elemento)):
-            i += 1
-         if i < len(self.__arreglo):
-            for j in range(self.__ultimo, i, -1):
-               self.__arreglo[j] = self.__arreglo[j-1]
-            self.__arreglo[i] = elemento
-            self.__ultimo += 1
-         else:
-           print("Lista llena")
+         for i in range(self.__ultimo-1, posicion-1, -1):
+            self.__arreglo[i+1] = self.__arreglo[i]
+         self.__arreglo[posicion] = elemento
+         self.__ultimo += 1
    
    def recuperar(self, posicion : int) -> object:
       if posicion < 0 or posicion > self.__ultimo:
-        print("Posicion fuera de rango")
+         raise Exception("Posicion fuera de rango")
       else:
          return self.__arreglo[posicion]
    
    def suprimir(self, posicion : int) -> object:
       if posicion < 0 or posicion > self.__ultimo:
-        print("Posicion fuera de rango")
+         raise Exception("Posicion fuera de rango")
       else:
          if posicion == self.__ultimo:
             self.__ultimo -= 1
@@ -53,43 +49,39 @@ class ListaSecuencial:
    
    def primerElemento(self) -> object:
       if self.__ultimo == 0:
-        print("Lista vacia")
+         raise Exception("Lista vacia")
       else:
          return self.__arreglo[0]
    
    def ultimoElemento(self) -> object:
       if self.__ultimo == 0:
-         print("Lista vacia")
+         raise Exception("Lista vacia")
       else:
          return self.__arreglo[self.__ultimo-1]
       
    def buscar(self, elemento : object) -> int:
-      piso = 0
-      techo = self.__ultimo
-      medio = int((piso + techo) / 2)
-      while piso <= techo and self.__arreglo[medio] != elemento:
-         if self.__arreglo[medio] < elemento:
-            piso = medio +1
-         else:
-            techo = medio -1
-         medio = int((piso + techo) / 2)
-      if self.__arreglo[medio] == elemento:
-         indice = medio
+      i = 0
+      while ((i < self.__ultimo) and (self.__arreglo[i] != elemento)):
+         i += 1
+      if i == self.__ultimo:
+         raise Exception("Elemento no encontrado")
       else:
-         indice = -1
-      return indice
+         return i
    
    def siguienteElemento(self, posicion : int) -> object:
       if posicion < 0 or posicion+1 > self.__ultimo:
-        print("Posicion fuera de rango")
+         raise Exception("Posicion fuera de rango")
       else:
          return posicion + 1
    
    def anteriorElemento(self, posicion : int) -> object:
       if posicion-1 < 0 or posicion > self.__ultimo:
-        print("Posicion fuera de rango")
+         raise Exception("Posicion fuera de rango")
       else:
          return posicion - 1
+   
+   def cantidadElementos(self) -> int:
+      return self.__ultimo
    
    def __iter__(self):
       return self
