@@ -13,12 +13,10 @@ def main():
    lista.insertar(4)
    lista.insertar(2)
    lista.insertar(3)
-   mostrarLista(lista)
-   lista.suprimir(1)
-   mostrarLista(lista)
    lista.insertar(1)
    lista.insertar(5)
    mostrarLista(lista)
+   print(lista.buscar(5))
 
 if __name__ == "__main__":
    main()

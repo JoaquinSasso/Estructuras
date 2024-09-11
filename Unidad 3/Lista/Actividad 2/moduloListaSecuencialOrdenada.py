@@ -12,7 +12,7 @@ class ListaSecuencial:
    
    def insertar(self, elemento : object) -> None:
       if self.__ultimo == len(self.__arreglo):
-         raise Exception("Lista llena")
+        print("Lista llena")
       elif self.__ultimo == 0:
          self.__arreglo[0] = elemento
          self.__ultimo += 1
@@ -26,17 +26,17 @@ class ListaSecuencial:
             self.__arreglo[i] = elemento
             self.__ultimo += 1
          else:
-            raise Exception("Lista llena")
+           print("Lista llena")
    
    def recuperar(self, posicion : int) -> object:
       if posicion < 0 or posicion > self.__ultimo:
-         raise Exception("Posicion fuera de rango")
+        print("Posicion fuera de rango")
       else:
          return self.__arreglo[posicion]
    
    def suprimir(self, posicion : int) -> object:
       if posicion < 0 or posicion > self.__ultimo:
-         raise Exception("Posicion fuera de rango")
+        print("Posicion fuera de rango")
       else:
          if posicion == self.__ultimo:
             self.__ultimo -= 1
@@ -53,34 +53,41 @@ class ListaSecuencial:
    
    def primerElemento(self) -> object:
       if self.__ultimo == 0:
-         raise Exception("Lista vacia")
+        print("Lista vacia")
       else:
          return self.__arreglo[0]
    
    def ultimoElemento(self) -> object:
       if self.__ultimo == 0:
-         raise Exception("Lista vacia")
+         print("Lista vacia")
       else:
          return self.__arreglo[self.__ultimo-1]
       
    def buscar(self, elemento : object) -> int:
-      i = 0
-      while ((i < self.__ultimo) and (self.__arreglo[i] != elemento)):
-         i += 1
-      if i == self.__ultimo:
-         raise Exception("Elemento no encontrado")
+      piso = 0
+      techo = self.__ultimo
+      medio = int((piso + techo) / 2)
+      while piso <= techo and self.__arreglo[medio] != elemento:
+         if self.__arreglo[medio] < elemento:
+            piso = medio +1
+         else:
+            techo = medio -1
+         medio = int((piso + techo) / 2)
+      if self.__arreglo[medio] == elemento:
+         indice = medio
       else:
-         return i
+         indice = -1
+      return indice
    
    def siguienteElemento(self, posicion : int) -> object:
       if posicion < 0 or posicion+1 > self.__ultimo:
-         raise Exception("Posicion fuera de rango")
+        print("Posicion fuera de rango")
       else:
          return posicion + 1
    
    def anteriorElemento(self, posicion : int) -> object:
       if posicion-1 < 0 or posicion > self.__ultimo:
-         raise Exception("Posicion fuera de rango")
+        print("Posicion fuera de rango")
       else:
          return posicion - 1
    
