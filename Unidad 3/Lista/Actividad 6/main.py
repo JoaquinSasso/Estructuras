@@ -48,7 +48,7 @@ def main():
          elif opcion == 3:
             mostrarMemoria(memoria)
          elif opcion == -1:
-            print("Saliendo del programa")
+            print("Deteniendo ejecucion")
 
 if __name__ == "__main__":
    main()
