@@ -1,7 +1,9 @@
 from moduloPilaSecuencial import PilaSecuencial
+from moduloPilaEnlazada import PilaEnlazada
 
 def main():
-   pila = PilaSecuencial(4)
+   #pila = PilaSecuencial(4)
+   pila = PilaEnlazada()
    
    pila.insertar(2)
    pila.insertar(3)
