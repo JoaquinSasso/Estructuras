@@ -1,147 +1,93 @@
-from moduloNodoCursor import NodoCursor
 import numpy as np
 
-class ListaCursor:
-   __lista : np.ndarray
-   __cabeza : int
-   __libre : int
-   __cantidad : int
-   __actual : int
-   __tope : int
+class ListaSecuencial:
+   __arreglo : np.ndarray
+   __ultimo : int
+   __indice : int
    
    def __init__(self, tope : int):
-      self.__lista = np.empty(tope, dtype=ListaCursor)
-      self.__cabeza = 0
-      self.__libre = 0
-      self.__cantidad = 0
-      self.__actual = 0
-      self.__tope = tope
-      self.inicializar()
+      self.__arreglo = np.empty(tope, dtype=object)
+      self.__ultimo = 0
+      self.__indice = 0
    
-   
-   def inicializar(self) -> None:
-      for i in range(self.__tope-1):
-         self.__lista[i] = NodoCursor(None, i + 1)
-      self.__lista[self.__tope-1] = NodoCursor(None, -1)
-      
-   
-   def insertar(self, dato : object):
-      if self.__cantidad == self.__tope:
+   def insertar(self, elemento : object, posicion : int) -> None:
+      if posicion < 0 or posicion >= len(self.__arreglo):
+         raise Exception("Posicion fuera de rango")
+      elif self.__ultimo + 1 > len(self.__arreglo):
          raise Exception("Lista llena")
-      elif self.__cantidad == 0:
-         nodo = self.__lista[self.__libre]
-         self.__cabeza = self.__libre
-         self.__libre = nodo.getSiguiente()
-         nodo.setDato(dato)
-         nodo.setSiguiente(-1)
-         self.__actual = self.__cabeza
-         self.__cantidad += 1
-      elif dato < self.__lista[self.__cabeza].getDato():
-         nodo = self.__lista[self.__libre]
-         indice = self.__libre
-         self.__libre = nodo.getSiguiente()
-         nodo.setDato(dato)
-         nodo.setSiguiente(self.__cabeza)
-         self.__cabeza = indice
-         self.__actual = self.__cabeza
-         self.__cantidad += 1
+      elif posicion == self.__ultimo:
+         self.__arreglo[self.__ultimo] = elemento
+         self.__ultimo += 1
       else:
-         actual = self.__cabeza
-         while actual != -1 and self.__lista[actual].getDato() < dato:
-            anterior = actual
-            actual = self.__lista[actual].getSiguiente()
-         nodo = self.__lista[self.__libre]
-         self.__cantidad += 1
-         self.__lista[anterior].setSiguiente(self.__libre)
-         self.__libre = nodo.getSiguiente()
-         nodo.setDato(dato)
-         nodo.setSiguiente(actual)
-
-
-   def suprimir(self, indice : int) -> object:
-      if indice >= self.__cantidad or indice < -1:
-         raise Exception("Indice fuera de rango")
-      elif indice == self.__cabeza:
-         self.__lista[self.__cabeza].setDato(None)
-         self.__cabeza = self.__lista[self.__cabeza].getSiguiente()
-         self.__lista[indice].setSiguiente(self.__libre)
-         self.__libre = indice
-         self.__cantidad -= 1
+         for i in range(self.__ultimo-1, posicion-1, -1):
+            self.__arreglo[i+1] = self.__arreglo[i]
+         self.__arreglo[posicion] = elemento
+         self.__ultimo += 1
+   
+   def recuperar(self, posicion : int) -> object:
+      if posicion < 0 or posicion > self.__ultimo:
+         raise Exception("Posicion fuera de rango")
       else:
-         i = self.__cabeza
-         while i != indice:
-            anterior = i
-            i = self.__lista[i].getSiguiente()
-         dato = self.__lista[i].getDato()
-         self.__lista[anterior].setSiguiente(self.__lista[i].getSiguiente())
-         self.__lista[i].setDato(None)
-         self.__lista[i].setSiguiente(self.__libre)
-         self.__libre = indice
-         self.__cantidad -= 1
-         return dato
-      
+         return self.__arreglo[posicion]
    
-   def recuperar(self, indice : int) -> object:
-      if indice >= self.__cantidad or indice < 0:
-         raise Exception("Indice fuera de rango")
-      i = self.__cabeza
-      while i != -1 and i != indice:
-         i = self.__lista[i].getSiguiente()
-      if i == -1:
-         return None
+   def suprimir(self, posicion : int) -> object:
+      if posicion < 0 or posicion > self.__ultimo:
+         raise Exception("Posicion fuera de rango")
       else:
-         return self.__lista[i].getDato()
+         if posicion == self.__ultimo:
+            self.__ultimo -= 1
+            elemento = self.__arreglo[posicion]
+         else:
+            elemento = self.__arreglo[posicion]
+            for i in range(posicion, self.__ultimo-1):
+               self.__arreglo[i] = self.__arreglo[i+1]
+            self.__ultimo -= 1
+         return elemento
    
-   
-   def siguienteElemento(self, indice : int) -> object:
-      if indice >= self.__cantidad or indice < 0:
-         raise Exception("Indice fuera de rango")
-      i = self.__cabeza
-      while i != -1 and i != indice:
-         i = self.__lista[i].getSiguiente()
-      if i == -1:
-         return None
-      else:
-         return self.__lista[i].getSiguiente()
-      
-   
-   def anteriorElemento(self, indice : int) -> object:
-      if indice >= self.__cantidad or indice < 0:
-         raise Exception("Indice fuera de rango")
-      i = self.__cabeza
-      while i != -1 and self.__lista[i].getSiguiente() != indice:
-         i = self.__lista[i].getSiguiente()
-      if i == -1:
-         return None
-      else:
-         return i
-   
+   def vacia(self) -> bool:
+      return self.__ultimo == 0
    
    def primerElemento(self) -> object:
-      return self.__lista[self.__cabeza].getDato()
-   
+      if self.__ultimo == 0:
+         raise Exception("Lista vacia")
+      else:
+         return self.__arreglo[0]
    
    def ultimoElemento(self) -> object:
-      i = self.__cabeza
-      while self.__lista[i].getSiguiente() != -1:
-         i = self.__lista[i].getSiguiente()
-      return self.__lista[i].getDato()
+      if self.__ultimo == 0:
+         raise Exception("Lista vacia")
+      else:
+         return self.__arreglo[self.__ultimo-1]
+      
+   def buscar(self, elemento : object) -> int:
+      i = 0                                                                      #1ut
+      while ((i < self.__ultimo) and (self.__arreglo[i] != elemento)):           #3n + 1ut
+         i += 1                                                                  #n - 1ut
+      if i == self.__ultimo:                                                     #1ut
+         raise Exception("Elemento no encontrado")                               #1ut
+      else:                                                                      #t(n): 4n + 3ut
+         return i                                                                #Resultado: t(n) e O(n)
    
+   def siguienteElemento(self, posicion : int) -> object:
+      if posicion < 0 or posicion+1 > self.__ultimo:
+         raise Exception("Posicion fuera de rango")
+      else:
+         return posicion + 1
    
-   def buscar(self, dato : object) -> int:
-      i = self.__cabeza
-      while i != -1 and self.__lista[i].getDato() != dato:
-         i = self.__lista[i].getSiguiente()
-      return i
+   def anteriorElemento(self, posicion : int) -> object:
+      if posicion-1 < 0 or posicion > self.__ultimo:
+         raise Exception("Posicion fuera de rango")
+      else:
+         return posicion - 1
    
    def __iter__(self):
       return self
    
    def __next__(self):
-      if self.__actual == -1:
-         self.__actual = self.__cabeza
+      if self.__indice == self.__ultimo:
+         self.__indice = 0
          raise StopIteration
       else:
-         dato = self.__lista[self.__actual].getDato()
-         self.__actual = self.__lista[self.__actual].getSiguiente()
-         return dato
+         elemento = self.__arreglo[self.__indice]
+         self.__indice += 1
+         return elemento
