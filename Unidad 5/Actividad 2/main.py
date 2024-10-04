@@ -1,3 +1,4 @@
+import time
 def modulo(dato, tamano):
    return dato % tamano
 
@@ -36,4 +37,11 @@ def alfanumerico(dato, longitudClave):
       i += 1
    return suma
 
-print(alfanumerico("papa", 3))
+def primo(x):
+   i = 2
+   while ((i < x) and (x % i != 0)):
+      i += 1
+   if (i == x):
+      return x
+   else:
+      return primo(x+1)
