@@ -1,12 +1,16 @@
-from moduloListaEnlazada import ListaEnlazada
 class TablaHash:
    __tamano : int
-   __tabla : list[ListaEnlazada]
+   __tabla : list[list]
    __colisiones : list
    def __init__(self, tamano):
       self.__tamano = self.primo(tamano)
-      self.__tabla = [ListaEnlazada()] * self.__tamano
+      self.__tabla = []
       self.__longitudClave = len(str(self.__tamano))
+      self.inicializar()
+      
+   def inicializar(self):
+      for i in range(self.__tamano):
+         self.__tabla.append([])
    
    def hash(self, clave):
       clave = self.plegamiento(clave, self.__longitudClave)
@@ -14,21 +18,19 @@ class TablaHash:
    
    def insertar(self, valor):
       pos = self.hash(valor)
-      self.__tabla[pos].insertar(valor)
+      self.__tabla[pos].append(valor)
          
    def buscar(self, valor):
       pos = self.hash(valor)
-      if self.__tabla[pos] == valor:
-         return hash, self.__tabla[pos].buscar(valor)
+      i = 0
+      while i < len(self.__tabla[pos]) and self.__tabla[pos][i] != valor:
+         i += 1
+      if i < len(self.__tabla[pos]):
+         print(f"El valor se encontro despues de {i} iteraciones")
+         return pos, i
       else:
-         return -1
-   
-   def suprimir(self, valor):
-      pos = self.buscar(valor)
-      if pos != -1:
-         self.__tabla[pos].suprimir(valor)
-      else:
-         print("Valor no encontrado")
+         print(f"El valor no se encontro despues de {i} iteraciones")
+         return -1, -1
    
    def mostrar(self):
       i = 0
@@ -76,20 +78,23 @@ class TablaHash:
    def calcularPromedioColisiones(self):
       total = 0
       for lista in self.__tabla:
-         total += lista.getCantidad()
+         total += len(lista)
       return total / self.__tamano
 
    def cantidadFueraPromedio(self):
+      rango = 3
       promedio = self.calcularPromedioColisiones()
       cantidad = 0
       for lista in self.__tabla:
-         if lista.getCantidad() >= promedio + 3 or lista.getCantidad() <= promedio - 3:
+         if len(lista) >= promedio + rango or len(lista) <= promedio - rango:
             cantidad += 1
       return cantidad
 
    def mostrarCantidadColisiones(self):
       i = 0
       print("Cantidad de colisiones:")
-      for i in self.__tamano:
-         print(f"{i} colisiones: {self.__tabla[i].getCantidad()}")
+      for i in range(self.__tamano):
+         cantidad = len(self.__tabla[i])
+         if cantidad != 0:
+            print(f"{i} colisiones: {cantidad}")
       print("Fin de la lista")

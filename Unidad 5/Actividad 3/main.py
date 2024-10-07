@@ -16,7 +16,6 @@ def main():
       opcion = int(input("""Menu de opciones
                          1. Agregar un valor
                          2. Buscar un valor
-                         3. Suprimir un valor
                          4. Mostrar la tabla
                          5. Calcular hash de un valor
                          6. Mostrar un hash
@@ -29,14 +28,9 @@ def main():
          tabla.insertar(valor)
       elif opcion == 2:
          valor = int(input("Ingrese el valor a buscar: "))
-         pos = tabla.buscar(valor)
+         hash, pos = tabla.buscar(valor)
          if pos != -1:
-            print(f"El valor se encuentra en la posicion {pos}")
-         else:
-            print("El valor no se encuentra en la tabla")
-      elif opcion == 3:
-         valor = int(input("Ingrese el valor a suprimir: "))
-         tabla.suprimir(valor)
+            print(f"El valor se encuentra en la posicion en el hash {hash} e indice {pos}")
       elif opcion == 4:
          tabla.mostrar()
       elif opcion == 5:
