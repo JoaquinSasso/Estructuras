@@ -13,17 +13,25 @@ def cuadradoMedio(dato, longitudClave):
    longitud = len(str(dato))
    medio = longitud // 2
    diferencial = longitudClave // 2
-   dato = extraccion(dato, medio - diferencial, medio + diferencial)
+   if longitudClave % 2 != 0:
+      dato = extraccion(dato, medio - diferencial, medio + diferencial +1)
+   else:
+      dato = extraccion(dato, medio - diferencial, medio + diferencial)
    return dato
 
 def plegamiento(dato, longitudClave):
    dato = str(dato)
    longitud = len(dato)
-   partes = longitud // longitudClave
+   partes = (longitud // longitudClave)
+   if longitud % longitudClave != 0:
+      partes += 1
    suma = 0
    i = 0
    while i < partes:
-      suma += int(dato[i * longitudClave:(i + 1) * longitudClave])
+      if i * longitudClave + longitudClave > longitud:
+         suma += int(dato[i * longitudClave:longitud])
+      else:
+         suma += int(dato[i * longitudClave:(i + 1) * longitudClave])
       i += 1
    return suma
 

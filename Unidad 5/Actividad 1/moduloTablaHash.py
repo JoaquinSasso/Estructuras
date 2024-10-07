@@ -3,9 +3,9 @@ class TablaHash:
    __tabla : list
    __colisiones : list
    def __init__(self, tamano):
-      self.__tamano = tamano
-      self.__tabla = [None] * tamano
-      self.__colisiones = [0] * tamano
+      self.__tamano = self.primo(tamano)
+      self.__tabla = [None] * self.__tamano
+      self.__colisiones = [0] * self.__tamano
    
    def hash(self, clave):
       return clave % self.__tamano
@@ -57,3 +57,12 @@ class TablaHash:
          if self.__colisiones[i] != 0:
             print(f"{i} colisiones: {self.__colisiones[i]}")
       print("Fin de la lista")
+   
+   def primo(self, x):
+      i = 2
+      while ((i < x) and (x % i != 0)):
+         i += 1
+      if (i == x):
+         return x
+      else:
+         return self.primo(x+1)
