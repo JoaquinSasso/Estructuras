@@ -53,3 +53,5 @@ def primo(x):
       return x
    else:
       return primo(x+1)
+
+print(extraccion(44991289, 4, 8))

@@ -1,0 +1,31 @@
+from moduloArbolBB import ArbolBinarioBusqueda
+
+def main():
+      arbol = ArbolBinarioBusqueda()
+      arbol.insertar(1, arbol.raiz)
+      arbol.visualizar("insercion 1")
+      arbol.insertar(5, arbol.raiz)
+      arbol.visualizar("insercion 5")
+      arbol.insertar(10, arbol.raiz)
+      arbol.visualizar("insercion 10")
+      arbol.insertar(15, arbol.raiz)
+      arbol.visualizar("insercion 15")
+      arbol.insertar(20, arbol.raiz)
+      arbol.visualizar("insercion 20")
+      arbol.insertar(25, arbol.raiz)
+      arbol.visualizar("insercion 25")
+      arbol.insertar(30, arbol.raiz)
+      arbol.visualizar("insercion 30")
+      arbol.insertar(35, arbol.raiz)
+      arbol.visualizar("insercion 35")
+      arbol.insertar(40, arbol.raiz)
+      arbol.visualizar("insercion 40")
+      arbol.insertar(45, arbol.raiz)
+      arbol.visualizar("insercion 45")
+      arbol.insertar(50, arbol.raiz)
+      arbol.visualizar("insercion 50")
+      arbol.insertar(60, arbol.raiz)
+      arbol.visualizar("insercion 60")
+      
+if __name__ == "__main__":
+    main()

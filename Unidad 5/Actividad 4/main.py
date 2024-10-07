@@ -16,11 +16,9 @@ def main():
       opcion = int(input("""Menu de opciones
                          1. Agregar un valor
                          2. Buscar un valor
-                         4. Mostrar la tabla
-                         5. Calcular hash de un valor
-                         6. Mostrar un hash
-                         7. Cantidad de listas que difieren en 3 o mas del promedio
-                         8. Mostrar cantidad de colisiones
+                         3. Mostrar la tabla
+                         4. Calcular hash de un valor
+                         5. Mostrar un hash
                          0. Salir
                          Ingrese una opcion: """))
       if opcion == 1:
@@ -31,20 +29,16 @@ def main():
          hash, pos = tabla.buscar(valor)
          if pos != -1:
             print(f"El valor se encuentra en el hash {hash} e indice {pos}")
-      elif opcion == 4:
+      elif opcion == 3:
          tabla.mostrar()
-      elif opcion == 5:
+      elif opcion == 4:
          valor = int(input("Ingrese el valor a calcular el hash: "))
          print(f"El hash del valor es {tabla.hash(valor)}")
-      elif opcion == 6:
+      elif opcion == 5:
          hashValue = int(input("Ingrese el hash a buscar: "))
          lista = tabla.getElemento(hashValue)
          for elemento in lista:
             print(elemento)
-      elif opcion == 7:
-         print("Cantidad de listas que difieren en 3 o mas del promedio: ", tabla.cantidadFueraPromedio())
-      elif opcion == 8:
-         tabla.mostrarCantidadColisiones()
       elif opcion == 0:
          print("Saliendo...")
       else:
