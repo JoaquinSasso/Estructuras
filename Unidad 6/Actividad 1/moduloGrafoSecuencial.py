@@ -1,12 +1,12 @@
 class grafoSecuencial:
    __matriz : list[list[int]]
    __cantNodos : int
-   __visitados : list[int]
+   __visitados : set
    
    def __init__(self, cantNodos: int):
       self.__cantNodos = cantNodos
       self.__matriz = []
-      self.__visitados = []
+      self.__visitados = set()
       for i in range(0, cantNodos):
          self.__matriz.append([0] * cantNodos)
    
@@ -31,7 +31,7 @@ class grafoSecuencial:
    
    def camino(self, nodoActual, nodoFin, caminoActual) -> list:
       caminoActual.append(nodoActual)
-      self.__visitados.append(nodoActual)
+      self.__visitados.add(nodoActual)
       if nodoActual == nodoFin:
          return caminoActual
       adyacentes = self.adyacentes(nodoActual)
@@ -39,27 +39,25 @@ class grafoSecuencial:
          caminoActual.append(nodoFin)
          return caminoActual
       else:
-         caminoFinal = [1] * (self.__cantNodos + 1)
          for a in adyacentes:
-            if a not in self.__visitados:
-               nuevoCamino = self.camino(a, nodoFin, caminoActual.copy())
-               if len(nuevoCamino) < len(caminoFinal):
-                  caminoFinal = nuevoCamino
-         return caminoFinal
+            if a  in self.__visitados:
+               continue
+            nuevoCamino = self.camino(a, nodoFin, caminoActual.copy())
+            if nodoFin in nuevoCamino:
+               return nuevoCamino
+      return []
 
    def hayarCamino(self, nodoInicio, nodoFin) -> list:
       caminoActual = []
-      self.__visitados = []
+      self.__visitados = set()
       camino = self.camino(nodoInicio, nodoFin, caminoActual)
-      if camino == [1] * (self.__cantNodos + 1):
-         camino = []
       return camino
    
    def conexo(self):
       contador = 1
       for i in range(1, self.__cantNodos):
          camino = self.hayarCamino(0, i)
-         if camino != []:
+         if camino != None:
             contador += 1
       return contador == self.__cantNodos
    
