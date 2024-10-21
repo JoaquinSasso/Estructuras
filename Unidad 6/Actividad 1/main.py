@@ -9,8 +9,9 @@ def main():
    g.agregarArista(2, 4)
 
    inicio = time.time()
-   print(g.hayarCamino(3, 4))
-   print(f"El grafo es conexo: {g.conexo()}")
+   distancias, predecesores = g.dijkstra(0)
+   print(distancias)
+   print(f"Camino más corto: {g.reconstruir_camino(predecesores, 0, 4)}")
    fin = time.time()
    print(f"Tiempo de ejecución: {fin - inicio}")
 if __name__ == "__main__":
