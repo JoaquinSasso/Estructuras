@@ -8,11 +8,9 @@ def main():
    g.agregarArista(1, 3)
    g.agregarArista(2, 4)
 
-   inicio = time.time()
-   distancias, predecesores = g.dijkstra(0)
-   print(distancias)
-   print(f"Camino más corto: {g.reconstruir_camino(predecesores, 0, 4)}")
-   fin = time.time()
-   print(f"Tiempo de ejecución: {fin - inicio}")
+   print("Imprimiendo grafo en anchura desde el 0")
+   g.recorrridoAnchura(0)
+   print("Imprimiendo grafo en profundidad desde el 0")
+   g.recorridoProfundidad(0)
 if __name__ == "__main__":
    main()
