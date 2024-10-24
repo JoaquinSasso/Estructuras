@@ -85,7 +85,7 @@ class grafoEncadenado:
       for a, p in adyacentes:
          if a in self.__visitados:
             continue
-         nuevoCamino = self.DSF(a, nodoFin, printear, caminoActual=caminoActual.copy())
+         nuevoCamino = self.DSF(a, nodoFin, printear, caminoActual.copy())
          if nodoFin in nuevoCamino:
             return nuevoCamino
       return []
