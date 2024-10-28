@@ -1,153 +1,201 @@
 class Nodo {
-   constructor(tablero, completitud) {
-      this.tablero = tablero;
-      this.valor = completitud;
-      this.siguiente = [];
-      this.numHijos = 0;
-   }
-   agregarSiguiente(nodo) {
-      this.siguiente.push(nodo);
-      this.siguiente.sort((a, b) => a.valor - b.valor);
-      this.numHijos++;
-   }
-}
+	constructor(tablero, profundidad, padre, movimiento) {
+		this.tablero = tablero;
+		this.profundidad = profundidad;
+		this.heuristica = this.calcularHeuristica();
+		this.padre = padre;
+		this.movimiento = movimiento;
+	}
 
-let tablero = [
-	[1, 2, 3],
-	[4, 5, 6],
-	[7, 8, 0],
-];
-let historial;
-let nodoRaiz;
-let pasos;
+	calcularHeuristica() {
+		let correctas = 0;
+		const objetivo = [
+			[1, 2, 3],
+			[4, 5, 6],
+			[7, 8, 0],
+		];
 
-function inicializarVariables() {
-   tablero = [
-      [1, 2, 3],
-      [4, 5, 6],
-      [7, 8, 0],
-   ];
-   historial = [];
-   nodoRaiz = new Nodo(tablero, calcularCompletitud(tablero));
+		for (let i = 0; i < 3; i++) {
+			for (let j = 0; j < 3; j++) {
+				if (this.tablero[i][j] === objetivo[i][j] && this.tablero[i][j] !== 0) {
+					correctas++;
+				}
+			}
+		}
+		return 9 - correctas;
+	}
+
+   obtenerMovimientos() {
+		const movimientos = [];
+		const [fila, columna] = this.buscarVacio();
+
+		const direcciones = [
+			[fila - 1, columna, "Mover arriba"],
+			[fila + 1, columna, "Mover abajo"],
+			[fila, columna - 1, "Mover izquierda"],
+			[fila, columna + 1, "Mover derecha"],
+		];
+
+		for (const [nuevaFila, nuevaColumna, direccion] of direcciones) {
+			if (
+				nuevaFila >= 0 &&
+				nuevaFila < 3 &&
+				nuevaColumna >= 0 &&
+				nuevaColumna < 3
+			) {
+				const nuevoTablero = JSON.parse(JSON.stringify(this.tablero));
+				const numeroMovido = nuevoTablero[nuevaFila][nuevaColumna];
+				[nuevoTablero[fila][columna], nuevoTablero[nuevaFila][nuevaColumna]] = [
+					nuevoTablero[nuevaFila][nuevaColumna],
+					nuevoTablero[fila][columna],
+				];
+				const movimiento = `Se movió el ${numeroMovido} a (${fila + 1}, ${
+					columna + 1
+				})`;
+				movimientos.push(
+					new Nodo(nuevoTablero, this.profundidad + 1, this, movimiento)
+				);
+			}
+		}
+
+		return movimientos;
+	}
+
+	buscarVacio() {
+		for (let i = 0; i < 3; i++) {
+			for (let j = 0; j < 3; j++) {
+				if (this.tablero[i][j] === 0) return [i, j];
+			}
+		}
+	}
+
+	esMeta() {
+		const objetivo = [
+			[1, 2, 3],
+			[4, 5, 6],
+			[7, 8, 0],
+		];
+		return JSON.stringify(this.tablero) === JSON.stringify(objetivo);
+	}
 }
 
 function resolverPuzzle() {
-   inicializarVariables();
-   historial.push(nodoRaiz.tablero);
-   expandirArbol();
-   dibujarTablero();
-}
+	const tableroInicial = obtenerTableroActual();
+	const nodoInicial = new Nodo(tableroInicial, 0, null, "Estado inicial");
+	const colaPrioridad = [nodoInicial];
+	const visitados = new Set();
+	visitados.add(JSON.stringify(nodoInicial.tablero));
 
+	while (colaPrioridad.length > 0) {
+		colaPrioridad.sort(
+			(a, b) => a.heuristica + a.profundidad - (b.heuristica + b.profundidad)
+		);
+		const nodoActual = colaPrioridad.shift();
 
-function generarTableroAleatorio() {
-	let numeros = [];
-	for (let i = 0; i < 9; i++) {
-		numeros.push(i); // Llena el array con los números del 0 al 8
-	}
-	numeros = numeros.sort(() => Math.random() - 0.5); // Desordena el array
-	let k = 0;
-	for (let i = 0; i < 3; i++) {
-		for (let j = 0; j < 3; j++) {
-			tablero[i][j] = numeros[k]; // Llena el tablero con los números desordenados
-			k++;
+		if (nodoActual.esMeta()) {
+			mostrarSolucion(nodoActual);
+			return;
+		}
+
+		for (const nodoHijo of nodoActual.obtenerMovimientos()) {
+			const tableroString = JSON.stringify(nodoHijo.tablero);
+			if (!visitados.has(tableroString)) {
+				visitados.add(tableroString);
+				colaPrioridad.push(nodoHijo);
+			}
 		}
 	}
-	dibujarTablero(); // Llama a la función para dibujar el tablero
+
+	document.getElementById("movimientos").innerHTML = "No se encontró solución.";
 }
 
-function dibujarTablero() {
+function mostrarSolucion(nodo) {
+	const camino = [];
+	while (nodo) {
+		camino.unshift(nodo);
+		nodo = nodo.padre;
+	}
+
+	let i = 0;
+	function mostrarPaso() {
+		if (i < camino.length) {
+			const nodo = camino[i];
+			actualizarTableroHTML(nodo.tablero);
+			document.getElementById(
+				"movimientos"
+			).innerHTML += `<p>${nodo.movimiento}</p>`;
+			i++;
+			setTimeout(mostrarPaso, 500);
+		}
+	}
+	mostrarPaso();
+}
+
+function actualizarTableroHTML(tablero) {
 	for (let i = 0; i < 3; i++) {
 		for (let j = 0; j < 3; j++) {
-			let celda = document.getElementById("c" + (i * 3 + j + 1)); // Obtiene la celda del html
-			if (tablero[i][j] == 0) {
-            celda.innerHTML = ""; // Limpia la celda
-            celda.classList.toggle("empty", true); // Agrega la clase empty
+			const celda = document.getElementById("c" + (i * 3 + j + 1));
+			if (tablero[i][j] === 0) {
+				celda.innerHTML = "";
+				celda.classList.add("empty");
 			} else {
-            celda.innerHTML = tablero[i][j]; // Muestra el número en la celda
-            celda.classList.toggle("empty", false); // Elimina la clase empty
+				celda.innerHTML = tablero[i][j];
+				celda.classList.remove("empty");
 			}
 		}
 	}
 }
 
-function calcularCompletitud(tableroActual) {
-   let completitud = 0;
-   for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-         if (tableroActual[i][j] == ((j + 1 + (i * 3))) % 9) {
-            completitud++;
+function obtenerTableroActual() {
+	const tablero = [];
+	for (let i = 0; i < 3; i++) {
+		tablero.push([]);
+		for (let j = 0; j < 3; j++) {
+			const celda = document.getElementById("c" + (i * 3 + j + 1));
+			tablero[i].push(celda.innerHTML ? parseInt(celda.innerHTML) : 0);
+		}
+	}
+	return tablero;
+}
+
+function generarTableroAleatorio() {
+   document.getElementById("movimientos").innerHTML = "";
+	let numeros = Array.from({ length: 9 }, (_, i) => i);
+	numeros = numeros.sort(() => Math.random() - 0.5);
+	const tablero = [];
+	let k = 0;
+	for (let i = 0; i < 3; i++) {
+		tablero.push([]);
+		for (let j = 0; j < 3; j++) {
+			tablero[i].push(numeros[k]);
+			k++;
+		}
+   }
+   if (!calcularInversiones(tablero)) {
+      return generarTableroAleatorio();
+   }
+	actualizarTableroHTML(tablero);
+}
+
+function calcularInversiones(tablero) {
+   let inversiones = 0;
+   let i = 0;
+   let j = 0;
+   for (k = 0; k < 9; k++) {
+      let maxI = Math.floor(k / 3);
+      let maxJ = k % 3;
+      if (tablero[maxI][maxJ] === 0) {
+         i = maxI;
+         j = maxJ;
+      }
+      for (let l = k + 1; l < 9; l++) {
+         let nextI = Math.floor(l / 3);
+         let nextJ = l % 3;
+         if (tablero[nextI][nextJ] !== 0 && tablero[nextI][nextJ] < tablero[maxI][maxJ]) {
+            inversiones++;
          }
       }
    }
-   return completitud;
-}
-
-function buscarVacio(tableroActual) {
-   for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-         if (tableroActual[i][j] == 0) {
-            return [i, j];
-         }
-      }
-   }
-}
-
-function expandirArbol()
-{
-   let nodoActual = new Nodo(tablero, calcularCompletitud(tablero));
-   historial.push(nodoActual.tablero);
-   let completitudActual = calcularCompletitud(tablero);
-   if (completitudActual == 9) {
-      return 1;
-   }
-   vacio = buscarVacio(tablero);
-   let i = vacio[0];
-   let j = vacio[1];
-   if (i < 2) // Movimiento hacia abajo
-   {
-      let tableroAuxiliar = JSON.parse(JSON.stringify(tablero));
-      let aux = tableroAuxiliar[i][j];
-      tableroAuxiliar[i][j] = tableroAuxiliar[i + 1][j];
-      tableroAuxiliar[i + 1][j] = aux;
-      if (!historial.includes(tableroAuxiliar)) {
-         nodoActual.agregarSiguiente(new Nodo(tableroAuxiliar, calcularCompletitud(tableroAuxiliar)));
-      }
-   }
-   if (i > 0) // Movimiento hacia arriba
-   {
-      let tableroAuxiliar = JSON.parse(JSON.stringify(tablero));
-      let aux = tableroAuxiliar[i][j];
-      tableroAuxiliar[i][j] = tableroAuxiliar[i - 1][j];
-      tableroAuxiliar[i - 1][j] = aux;
-      if (!historial.includes(tableroAuxiliar)) {
-         nodoActual.agregarSiguiente(new Nodo(tableroAuxiliar, calcularCompletitud(tableroAuxiliar)));
-      }
-   }
-   if (j < 2) // Movimiento hacia la derecha
-   {
-      let tableroAuxiliar = JSON.parse(JSON.stringify(tablero));
-      let aux = tableroAuxiliar[i][j];
-      tableroAuxiliar[i][j] = tableroAuxiliar[i][j + 1];
-      tableroAuxiliar[i][j + 1] = aux;
-      if (!historial.includes(tableroAuxiliar)) {
-         nodoActual.agregarSiguiente(new Nodo(tableroAuxiliar, calcularCompletitud(tableroAuxiliar)));
-      }
-   }
-   if (j > 0) // Movimiento hacia la izquierda
-   {
-      let tableroAuxiliar = JSON.parse(JSON.stringify(tablero));
-      let aux = tableroAuxiliar[i][j];
-      tableroAuxiliar[i][j] = tableroAuxiliar[i][j - 1];
-      tableroAuxiliar[i][j - 1] = aux;
-      if (!historial.includes(tableroAuxiliar)) {
-         nodoActual.agregarSiguiente(new Nodo(tableroAuxiliar, calcularCompletitud(tableroAuxiliar)));
-      }
-   }
-   for (let i = 0; i < nodoActual.numHijos; i++) {
-      tablero = nodoActual.siguiente[i].tablero;
-      resultado = expandirArbol();
-      if (resultado == 1) {
-         return;
-      }
-   }
+   console.log(inversiones);
+   return inversiones % 2 === 0;
 }
