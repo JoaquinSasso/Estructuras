@@ -1,0 +1,33 @@
+body {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   height: 100vh;
+   margin: 0;
+   font-family: Arial, sans-serif;
+}
+table {
+   border-collapse: collapse;
+   margin: 20px auto;
+}
+td {
+   width: 200px;
+   height: 200px;
+   text-align: center;
+   vertical-align: middle;
+   border: 1px solid #000;
+   font-size: 60px;
+}
+.empty {
+   background-color: #ccc;
+}
+.botonera {
+   margin-top: 20px;
+}
+.botonera button {
+   padding: 10px 20px;
+   font-size: 16px;
+   margin: 0 10px;
+   cursor: pointer;
+}

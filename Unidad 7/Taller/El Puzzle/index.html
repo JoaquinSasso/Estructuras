@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Puzzle 3x3</title>
+      <link rel="stylesheet" href="styles.css">
+      <script src="script.js"></script>
+   </head>
+   <body>
+      <div id="tablero">
+         <table>
+            <tr>
+               <td id="c1">1</td>
+               <td id="c2">2</td>
+               <td id="c3">3</td>
+            </tr>
+            <tr>
+               <td id="c4">4</td>
+               <td id="c5">5</td>
+               <td id="c6">6</td>
+            </tr>
+            <tr>
+               <td id="c7">7</td>
+               <td id="c8">8</td>
+               <td id="c9" class="empty"></td>
+            </tr>
+         </table>
+      </div>
+      <div class="botonera">
+         <button onclick="generarTableroAleatorio()">Generar Tablero
+            Aleatorio</button>
+         <button onclick="resolverPuzzle()">Resolver Puzzle</button>
+         <button onclick="mostrarPasos()">Mostrar Pasos</button>
+      </div>
+   </body>
+</html>
