@@ -13,13 +13,13 @@ class ArbolBinarioBusqueda:
       elif dato < actual.getDato():
          if actual.getIzquierda() == None:
             actual.setIzquierda(NodoArbol(dato))
-            self.calcularBalance(self.raiz)
+            #self.calcularBalance(self.raiz)
          else:
             self.insertar(dato, actual.getIzquierda())            
       elif dato > actual.getDato():
          if actual.getDerecha() == None:
             actual.setDerecha(NodoArbol(dato))
-            self.calcularBalance(self.raiz)
+            #self.calcularBalance(self.raiz)
          else:
             self.insertar(dato, actual.getDerecha())
       else:
