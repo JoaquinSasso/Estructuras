@@ -79,14 +79,22 @@ class Nodo {
 	}
 }
 
+let cantidadNodos;
+let cantidadExpansiones;
+let profundidad;
+
 function resolverPuzzle() {
+	cantidadExpansiones = 0;
+	cantidadNodos = 0;
 	const tableroInicial = obtenerTableroActual();
 	const nodoInicial = new Nodo(tableroInicial, 0, null, "Estado inicial");
 	const colaPrioridad = [nodoInicial];
+	historial = [nodoInicial];
 	const visitados = new Set();
 	visitados.add(JSON.stringify(nodoInicial.tablero));
 
 	while (colaPrioridad.length > 0) {
+		cantidadExpansiones++;
 		colaPrioridad.sort(
 			(a, b) => a.heuristica + a.profundidad - (b.heuristica + b.profundidad)
 		);
@@ -94,12 +102,14 @@ function resolverPuzzle() {
 
 		if (nodoActual.esMeta()) {
 			mostrarSolucion(nodoActual);
+			profundidad = nodoActual.profundidad;
 			return;
 		}
 
 		for (const nodoHijo of nodoActual.obtenerMovimientos()) {
 			const tableroString = JSON.stringify(nodoHijo.tablero);
 			if (!visitados.has(tableroString)) {
+				cantidadNodos++;
 				visitados.add(tableroString);
 				colaPrioridad.push(nodoHijo);
 			}
@@ -110,12 +120,15 @@ function resolverPuzzle() {
 }
 
 function mostrarSolucion(nodo) {
+	profundidad = nodo.profundidad;
 	const camino = [];
 	while (nodo) {
 		camino.unshift(nodo);
 		nodo = nodo.padre;
 	}
-
+	document.getElementById("cantidadNodos").innerHTML = "La cantidad de nodos generados es de: " + cantidadNodos;
+	document.getElementById("cantidadExpansiones").innerHTML = "La cantidad de nodos analizados es de: " + cantidadExpansiones;
+	document.getElementById("profundidad").innerHTML = "La cantidad de movimientos es de: " + profundidad;
 	let i = 0;
 	function mostrarPaso() {
 		if (i < camino.length) {
