@@ -8,16 +8,14 @@ def main():
    raiz.insertar(7)
    raiz.insertar(13)
    raiz.insertar(18)
-   raiz.insertar(1)
    raiz.insertar(4)
+   raiz.insertar(1)
    raiz.insertar(6)
    raiz.insertar(8)
    raiz.insertar(11)
    raiz.insertar(14)
    raiz.insertar(16)
    
-   raiz.suprimir(5)
-   raiz.visualizar("Arbol con 5 suprimido")
 if __name__ == "__main__":
    main()
    
