@@ -16,6 +16,9 @@ def main():
    raiz.insertar(14)
    raiz.insertar(16)
    
+   raiz.suprimir(1)
+   raiz.visualizar("Arbol suprimir 1")
+   
 if __name__ == "__main__":
    main()
    

@@ -20,6 +20,9 @@ class Arbol:
    
    def setDerecha(self, nodo):
       self.__derecha = nodo
+      
+   def setIzquierda(self, nodo):
+      self.__izquierda = nodo
    
    def insertar(self, dato):
       if dato < self.__dato:
@@ -35,14 +38,19 @@ class Arbol:
       else:
          print("El dato ya existe en el arbol")
    
-   def profundidad(self, dato): #NO ESTABA EN EL PARCIAL
+   def grado(self, dato): #Operacion recursiva para calcular el grado de
       if dato == self.__dato:
-         return 0
-      elif dato < self.__dato and self.__izquierda != None:
-         return 1 + self.__izquierda.profundidad(dato)
-      elif dato > self.__dato and self.__derecha != None:
-         return 1 + self.__derecha.profundidad(dato)
-      return None
+         if self.__izquierda == None and  self.__derecha == None:
+            return 0
+         if self.__izquierda != None and self.__derecha != None:
+            return 2
+         else:
+            return 1
+      if dato < self.__dato:
+         return self.__izquierda.grado(dato)
+      else:
+         return self.__derecha.grado(dato)
+      
    
    def calcularDecendientes(self, dato): #Operacion recursiva que retorna la cantidad de descendientes de un nodo Parte 1
       if dato == self.__dato:
@@ -72,14 +80,25 @@ class Arbol:
       if self.__derecha != None:
          self.__derecha.nodosHojas()
    
-   def visualizar(self, nombre):
+   
+   def profundidad(self, dato): #NO ESTABA EN EL PARCIAL
+      if dato == self.__dato:
+         return 0
+      elif dato < self.__dato and self.__izquierda != None:
+         return 1 + self.__izquierda.profundidad(dato)
+      elif dato > self.__dato and self.__derecha != None:
+         return 1 + self.__derecha.profundidad(dato)
+      return None
+   
+   
+   def visualizar(self, nombre): #ES PARA CREAR UN GRAFICO DEL ARBOL
         dot = Digraph() # crea el objeto
         self.__visualizar(dot, self) # llama la funcion recursiva
         filename = f'{nombre}' # crea un nombre unico para cada imagen
         dot.render(filename, format='png', cleanup=True)  # Guarda el gráfico como '{nombre}.png'
        
 
-   def __visualizar(self, dot, nodo):
+   def __visualizar(self, dot, nodo): #ES PARA CREAR UN GRAFICO DEL ARBOL
       if nodo is not None:
          label = f'{nodo.getDato()}' # crea el string para el nodo
          # dot.node(str(nodo.getDato()), str(nodo.getDato()), shape='circle')
@@ -95,35 +114,29 @@ class Arbol:
    def buscarMayor(self, anterior): #NO ESTABA EN EL PARCIAL
       if self.__derecha != None:
          return self.__derecha.buscarMayor(self)
-      else:
+      elif self.__izquierda != None:
          anterior.setDerecha(self.__izquierda)
-         return self.__dato      
+      else:
+         anterior.setDerecha(None)
+      return self.__dato
    
    def suprimir(self, dato, anterior = None): #NO ESTABA EN EL PARCIAL
       if dato == self.__dato:
-         if self.__izquierda != None:
+         if self.__izquierda == None and self.__derecha == None:
+            if anterior.getIzquierda() == self:
+               anterior.setIzquierda(None)
+            else:
+               anterior.setDerecha(None)
+         elif self.__izquierda.grado(self.__izquierda.getDato()) != 0:
             datoAuxiliar = self.__izquierda.buscarMayor(self)
             self.__dato = datoAuxiliar
          else:
-            if anterior != None:
-               anterior.setDerecha(self.__derecha)
-            else:
-               return self.__derecha
+            self.__dato = self.__izquierda.getDato()
+            self.__izquierda = None
       elif dato < self.__dato and self.__izquierda != None:
          return self.__izquierda.suprimir(dato, self)
       elif dato > self.__dato and self.__derecha != None:
          return self.__derecha.suprimir(dato, self)
       return None
-
-   def grado(self, dato): #Operacion recursiva para calcular el grado de un nodo
-      if dato == self.__dato:
-         if self.__izquierda == None and  self.__derecha == None:
-            return 0
-         if self.__izquierda != None and self.__derecha != None:
-            return 2
-         else:
-            return 1
-      if dato < self.__dato:
-         return self.__izquierda.grado(dato)
-      else:
-         return self.__derecha.grado(dato)
+   
+   
