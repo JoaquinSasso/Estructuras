@@ -139,4 +139,34 @@ class Arbol:
          return self.__derecha.suprimir(dato, self)
       return None
    
-   
+
+# Complejidad de cantidadDecendientes                                                                       Todas las unidades de tiempo son n ya que la funcion es recursiva
+#if self.__izquierda == None and self.__derecha == None:                                                    3n
+#   return 0
+#elif self.__izquierda == None and self.__derecha != None:                                                  3n
+#   return 1 + self.__derecha.cantidadDecendientes()
+#elif self.__derecha == None:                                                                               n
+#   return 1 + self.__izquierda.cantidadDecendientes() 
+#else:
+#          return 2 + self.__izquierda.cantidadDecendientes() + self.__derecha.cantidadDecendientes()       5n (2 sumas, 2 invocaciones y el retorno)
+#Total                                                                                                      3n + 3n + n + 5n = 12n : O(n)
+
+#Complejidad de calcularDecendientes
+# if dato == self.__dato:                                      n
+#    return self.cantidadDecendientes()                        13n (12n de cantidadDecendientes + 1n del return)
+# elif dato < self.__dato and self.__izquierda != None:        3n
+#    return self.__izquierda.buscar(dato)                      
+# elif dato > self.__dato and self.__derecha != None:          3n
+#    return self.__derecha.buscar(dato)
+# return None                                                  Esto seria un caso else, pero como no es el peor caso no se considera
+# Total                                                        n + 13n + 3n + 3n = 20n : O(n) 
+
+
+# Complejidad de nodosHojas
+# if self.__izquierda != None:                                 n
+#    self.__izquierda.nodosHojas()
+# elif self.__izquierda == None and self.__derecha == None:    3n
+#    print(self.__dato)
+# elif self.__derecha != None:                                 n
+#    self.__derecha.nodosHojas()                               n (Se elije el peor caso dentro de los if, en este caso son todos iguales)
+# Total                                                        n + 3n + n + n = 6n : O(n)
