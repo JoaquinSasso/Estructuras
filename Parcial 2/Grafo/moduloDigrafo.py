@@ -35,22 +35,21 @@ class Digrafo:
    
    #Complejidad de gradoSalida / gradoEntrada cambiando los corchetes
       #contador = 0                             1ut
-      # for i in range(self.__cantVertices):    2n + 1ut
-      # if self.__matriz[vertice][i] != 0:         2n
-      # contador += 1                           n
+      # for i in range(self.__cantVertices):    2n + 2ut
+      #     if self.__matriz[vertice][i] != 0:  2n
+      #        contador += 1                    n
       # return contador                         1ut
-      # Total                                   5n + 3ut : O(n)
+      # Total                                   5n + 4ut : O(n)
    
    #Complejidad de esFuente
       # return self.gradoEntrada(vertice) == 0 and self.gradoSalida(vertice) != 0
       # Es la complejidad de gradoEntrada + gradoSalida + 4ut
       # Las 4 ut son por 3 operaciones y el retorno
-      # Operacion auxiliar                      2 * (5n + 3ut) + 4ut
-      # Total                                   10n + 10 ut : O(n)
+      # Operacion auxiliar                      2 * (5n + 4ut) + 4ut
+      # Total                                   10n + 12 ut : O(n)
       
    #Complejidad mostrarFuentes
-      # for i in range(self.__cantVertices):    2n + 1ut
+      # for i in range(self.__cantVertices):    2n + 2ut
       #    if self.esFuente(i):                 10n + 11 ut
       #      print(f"El vertice {i} es fuente") 1 ut
-      # Total                                   12n + 13ut : O(n)        
-   
+      # Total                                   12n + 14ut : O(n)        
