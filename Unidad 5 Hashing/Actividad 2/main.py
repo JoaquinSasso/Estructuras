@@ -35,7 +35,7 @@ def plegamiento(dato, longitudClave):
       i += 1
    return suma
 
-def alfanumerico(dato, longitudClave):
+def alfanumerico(dato):
    dato = str(dato)
    longitud = len(dato)
    suma = 0
@@ -54,4 +54,3 @@ def primo(x):
    else:
       return primo(x+1)
 
-print(extraccion(44991289, 4, 8))
